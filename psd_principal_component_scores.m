@@ -29,6 +29,9 @@ cfgIn = [];
 if isfield(cfg, 'freq_range'), cfgIn.xrange = cfg.freq_range; end
 if isfield(cfg, 'n_comps'), cfgIn.n_comps = cfg.n_comps; end
 
+disp('Perform PCA on power spectra data.')
+fprintf("Frequency range of interest: [%.4f, %.4f] Hz.\n", cfg.freq_range(1), cfg.freq_range(2));
+
 psd_dB = 10*log10(psd);
 
 pc_scores = principal_component_scores(psd_dB, freq, cfgIn);

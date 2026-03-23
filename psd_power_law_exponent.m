@@ -26,6 +26,9 @@ cfgIn = [];
 if ~isfield(cfg, 'freq_range'), error('Please specify a frequency range of interest!');
 else, cfgIn.xrange = cfg.freq_range; end
 
+disp('Fit power law to each spectrum.')
+fprintf("Frequency range to fit power law: [%.4f, %.4f] Hz.\n", cfg.freq_range(1), cfg.freq_range(2));
+
 psd_exp = fit_power_law(psd, freq, cfgIn);
 
 end
