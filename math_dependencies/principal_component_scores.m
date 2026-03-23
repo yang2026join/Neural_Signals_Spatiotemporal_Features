@@ -34,9 +34,7 @@ function [pc_scores, pca_results] = principal_component_scores(data, xspan, cfg)
 
 % Get configurations
 if isfield(cfg, "cum_var"), cum_var_required = cfg.cum_var; end
-if isfield(cfg, "xrange"), xrange = cfg.xrange;
-    fprintf("Note: Selected interval to do PCA: [%.4f, %.4f].\n", xrange(1), xrange(2));
-else, xrange = xspan([1 end]); end
+if isfield(cfg, "xrange"), xrange = cfg.xrange;  else, xrange = xspan([1 end]); end
 
 % Perform PCA
 data2use = data(:, xspan >= xrange(1) & xspan <= xrange(2));

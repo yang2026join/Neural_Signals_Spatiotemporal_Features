@@ -23,7 +23,6 @@ function [exponent, fit_results] = fit_power_law(data, xspan, cfg)
 %   fit_results.rsquared:   R^2 in linear regression, N x 1
 
 if ~isfield(cfg, 'xrange'), error('Please specify an interval!'); else, xrange = cfg.xrange; end
-fprintf("Interval to fit the power law: [%.4f, %.4f].\n", xrange(1), xrange(2));
 
 % Get data to fit and the associated coordinates
 idx = (xspan > xrange(1) & xspan < xrange(2));
