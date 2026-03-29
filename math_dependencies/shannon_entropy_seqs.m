@@ -1,5 +1,6 @@
-function H = shannon_entropy(data, cfg)
-%SHANNON_ENTROPY This function calculates Shannon entropy of input data.
+function shannonEn = shannon_entropy_seqs(seqs, cfg)
+%SHANNON_ENTROPY_SEQS This function calculates Shannon entropy of each
+%sequence given in input "seqs".
 %
 % Shannon entropy measures the uncertainty of a random variable with a
 % finite number of outcomes. It is based on the probability distribution of
@@ -10,22 +11,17 @@ function H = shannon_entropy(data, cfg)
 % uniformly distributed, then the entropy value is maximized. In practice,
 % a random variable may take continuous values, and it's common to divide
 % the range of values into multiple bins and count the frequencies of
-% each bin. This function calculates Shannon entropy of data. Note that all
-% data points will be used to construct the probability distribution
-% regardless of the shape of "data" array.
+% each bin. This function calculates Shannon entropy of each sequence
+% (e.g., time series) given in "seqs".
 %
-% Key reference(s):
-% Shannon, C. E. (1948). A mathematical theory of communication. The Bell
-% system technical journal, 27(3), 379-423.
+% Note: It's important to note that this function applies a fixed set of
+% edges to bin each sequence. This is important to eliminating the effects
+% of using different binnings.
 %
-%   H = shannon_entropy(data, cfg)
+%   shannonEn = shannon_entropy_seqs(seqs, cfg)
 %
 % Input:
-%  data:    an array with finite values in a certain range, typically,
-%           a phase time series in [-pi, +pi] (resulting in phase Shannon
-%           entropy, phase transfer entropy, etc.), functional connectivity
-%           matrix in [0, 1] (resulting in FC diversity, etc.), Kuramoto
-%           order parameter in [0, 1] (giving synchrony entropy).
+%  seqs:    N x T, N = number of sequences, T = number of data points
 %  cfg:     struct of configurations
 %   cfg.range:      range of values to be divided into bins; default:
 %                   smallest and largest values of data
@@ -35,41 +31,50 @@ function H = shannon_entropy(data, cfg)
 %                   apply normalization by the maximal entropy under the
 %                   given number of bins; default: false
 % Output:
-%  H:   Shannon entropy of the data
+%  H:   N x 1 array, Shannon entropy of each phase time series
 %
 %                                                  YANG Hao, 2025-26 Spring
 %            Centre for Nonlinear Studies, Hong Kong Baptist University, HK
 
 % Get configurations
-data = data(:);    % vectorize the input array
+N = size(seqs,1);
+seqs_flat = seqs(:);
 if isfield(cfg, 'num_bins')
     num_bins = cfg.num_bins;
 else
-    bin_size = 3.49 * mean(std(data)) * length(data)^(-1/3);
+    bin_size = 3.49 * mean(std(seqs_flat)) * length(seqs_flat)^(-1/3);
     num_bins = round(2*pi/bin_size);
 end
 if ~isfield(cfg, 'norml'), norml = false;  else, norml = cfg.norml;  end
-if ~isfield(cfg, 'range'), range = [min(data) max(data)];  else, range = cfg.range;  end
+if ~isfield(cfg, 'range'), range = [min(seqs_flat) max(seqs_flat)];  else, range = cfg.range;  end
 % verbose
-disp('Calculate Shannon entropy for all input data.')
+disp('Calculate Shannon entropy for each sequence.')
 if isfield(cfg, 'range'), fprintf("Range of values: [%.4f, %.4f].\n", range);
-else, disp("Range of values: [min, max] of the data.\n");  end
+else, disp("Range of values: [min, max] of all the data.");  end
 fprintf("Number of bins to divide the range: %d.\n", num_bins);
 if norml, disp('Normalization is applied.');  end
 
 % Form edges to bin the values
 edges = linspace(range(1), range(2), num_bins+1);
 
-% Count occurrences of each bin and calculate frequencies
-probs = histcounts(data, edges, 'Normalization', 'probability');
+% Loop over phase time series
+shannonEn = zeros(N,1);
+for i = 1:N
 
-% Exclude bins with no occurrence
-probs = probs(probs > 0);
+    % Count occurrences of each bin and calculate frequencies
+    probs = histcounts(seqs(i,:), edges, 'Normalization', 'probability');
 
-% Compute Shannon entropy
-H = -sum(probs .* log2(probs));
+    % Exclude bins with no occurrence
+    probs = probs(probs > 0);
+    
+    % Compute Shannon entropy
+    H = -sum(probs .* log2(probs));
 
-% Normalization by the maximum entropy if requied
-if norml, H = H / log2(num_bins); end
+    % Normalization by the maximum entropy if requied
+    if norml, H = H / log2(num_bins); end
+
+    % Save the result
+    shannonEn(i) = H;
+end
 
 end
