@@ -17,7 +17,7 @@ function psd_exp = psd_power_law_exponent(psd, freq, cfg)
 %  cfg:     struct of configurations
 %   cfg.freq_range: frequency range of interest, a 1 x 2 array; required
 % Output:
-%  alff:    N x 1, amplitude of low-frequency fluctuations
+%  psd_exp: N x 1, power-law exponent of each spectrum
 %
 %                                                  YANG Hao, 2025-26 Spring
 %            Centre for Nonlinear Studies, Hong Kong Baptist University, HK
