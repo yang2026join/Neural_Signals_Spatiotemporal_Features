@@ -61,7 +61,7 @@ if norml, disp('Normalization is applied.');  end
 edges = linspace(range(1), range(2), num_bins+1);
 
 % Count occurrences of each bin and calculate frequencies
-probs = histcounts(data, edges, 'Normalization', 'probability');
+probs = histcounts(data, edges);  probs = probs / sum(probs);
 
 % Exclude bins with no occurrence
 probs = probs(probs > 0);

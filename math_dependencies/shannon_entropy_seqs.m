@@ -62,7 +62,7 @@ shannonEn = zeros(N,1);
 for i = 1:N
 
     % Count occurrences of each bin and calculate frequencies
-    probs = histcounts(seqs(i,:), edges, 'Normalization', 'probability');
+    probs = histcounts(seqs(i,:), edges);  probs = probs / sum(probs);
 
     % Exclude bins with no occurrence
     probs = probs(probs > 0);
