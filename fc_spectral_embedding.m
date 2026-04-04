@@ -1,4 +1,4 @@
-function fc_grad = fc_spectral_embedding(fc, cfg)
+function [fc_grad, eigvals] = fc_spectral_embedding(fc, cfg)
 %FC_SPECTRAL_EMBEDDING This function applies spectral embedding algorithm
 %to a functional connectivity matrix.
 %
@@ -15,7 +15,7 @@ function fc_grad = fc_spectral_embedding(fc, cfg)
 % networks configure different cognitive abilities. Proceedings of the
 % National Academy of Sciences, 118(23), e2022288118.
 %
-%   fc_grad = fc_spectral_embedding(fc, cfg)
+%   [fc_grad, eigvals] = fc_spectral_embedding(fc, cfg)
 %
 % Input:
 %  fc:  N x N functional connectivity matrix calculated from Pearson
@@ -27,7 +27,8 @@ function fc_grad = fc_spectral_embedding(fc, cfg)
 %                   in each row of FC matrix below this threshold will be
 %                   set to 0; default: 1 (to exclude a few outliers);
 % Output:
-%  fc_embed:    N x k FC embeddings, each column one eigenmode.
+%  fc_embed:    N x k FC embeddings, each column one eigenmode
+%  eigvals:     1 x k eigenvalues associated with each embedding
 %
 %                                                  YANG Hao, 2025-26 Spring
 %            Centre for Nonlinear Studies, Hong Kong Baptist University, HK
@@ -45,7 +46,7 @@ fc_thres(fc < thres_) = thres_;
 cfgIn = [];
 cfgIn.n_comps = n_comps;
 
-fc_grad = spectral_embedding(fc_thres, cfgIn);
+[fc_grad, eigvals] = spectral_embedding(fc_thres, cfgIn);
 
 mean_fc_embed_1 = mean(fc_grad(:,1));
 if mean_fc_embed_1 > 1 || mean_fc_embed_1 < -1

@@ -2,9 +2,15 @@ function [fc_eigvecs, fc_eigvals] = fc_eigendecomp(fc, cfg)
 %FC_EIGENDECOMP This function calculates the eigenvectors and associated
 %eigenvalues of a functional connectivity matrix.
 %
+% Eigenmodes of FC represent different modes of brain activity. If the FC
+% matrix is calculated by Pearson correlation coefficients, then the
+% eigenvectors of FC are exactly the principal components of z-score
+% normalized signals, taking each region as a feature and each time point
+% as an observation.
+%
 %   [fc_eigvecs, fc_eigvals] = fc_eigendecomp(fc, cfg)
 %
-%Input:
+% Input:
 %  fc:      N x N FC matrix
 %  cfg:     struct of configurations
 %   cfg.n_modes:    number of eigenmodes selected; default: N (all modes)
