@@ -26,6 +26,11 @@ function [Fval, win_lens] = detrended_fluctuation_analysis(signal, time, fs, cfg
 %   facilitate downstream analysis of fitting power law to the fluctuation
 %   function.
 %
+% Key reference(s):
+% Meisel, C., Bailey, K., Achermann, P., & Plenz, D. (2017). Decline of
+% long-range temporal correlations in the human brain during sustained
+% wakefulness. Scientific reports, 7(1), 11825.
+%
 %   [Fval, win_lens] = detrended_fluctuation_analysis(signal, time, fs, cfg)
 %
 % Input:
@@ -43,8 +48,8 @@ function [Fval, win_lens] = detrended_fluctuation_analysis(signal, time, fs, cfg
 %   cfg.order_polyfit:  order of polynomial fitted to profile time series;
 %                       default: 1
 % Output:
-%  Fval:    values of fluctuation function
-%  win_len: window lengths associated with each of Fval
+%  Fval:        values of fluctuation function
+%  win_lens:    window lengths in number of time points
 %
 %                                       WU Kejian, YANG Hao, 2025-26 Spring
 %            Centre for Nonlinear Studies, Hong Kong Baptist University, HK
@@ -56,10 +61,11 @@ if ~isfield(cfg, 'min_win_len'), min_win_len = 10;  else, min_win_len = floor(cf
 if ~isfield(cfg, 'num_win_lens'), num_win_lens = 12;  else, num_win_lens = cfg.num_win_lens;  end
 if ~isfield(cfg, 'order_polyfit'), order_polyfit = 1;  else, order_polyfit = cfg.order_polyfit;  end
 
-% Form window lengths at which fluctuation function is evaluated
+% Form window lengths for which fluctuation function is evaluated
 win_lens = logspace(log10(min_win_len), log10(max_win_len), num_win_lens);
 win_lens = floor(win_lens);
 M = length(win_lens);
+disp('Perform detrended fluctuation analysis on each time series.')
 fprintf("Window lengths of interest: %.4f sec (%d time points) to %.4f sec (%d time points).\n", ...
     min_win_len*fs, min_win_len, max_win_len*fs, max_win_len)
 
@@ -100,7 +106,7 @@ for n = 1:N
             std_running_sum = std_running_sum + std(y_win - trend);
         end
         % averaged standard deviation, which is exactly, the value of
-        % fluctuation function at this window length
+        % fluctuation function, for this window length
         Fval_n(m) = std_running_sum / n_segm;
     end
     Fval(n,:) = Fval_n;

@@ -26,7 +26,7 @@ if ~isfield(cfg, 'win_len_range'), error('Please specify a range of window lengt
 else, win_len_range = cfg.win_len_range; end
 
 disp('Fit power law to each fluctuation function.')
-fprintf("Window length to fit power law: [%.4f, %.4f] Hz.\n", win_len_range(1), win_len_range(2));
+fprintf("Window length to fit power law: [%.4f, %.4f] time points.\n", win_len_range(1), win_len_range(2));
 
 cfgIn = [];
 cfgIn.xrange = win_len_range;
