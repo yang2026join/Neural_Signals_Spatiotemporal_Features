@@ -1,6 +1,6 @@
-function dfa_exp = dfa_exponent(Fval, win_len, cfg)
-%DFA_EXPONENT This function fits power law to each fluctuation function and
-%returns the exponent in the fitted curve.
+function dfa_exp = dfa_hurst_exponent(Fval, win_len, cfg)
+%DFA_HURST_EXPONENT This function fits power law to each fluctuation
+%function and returns the exponent in the fitted curve.
 %
 % Detrended fluctuation analysis (DFA) is a technique to estimate
 % long-range temporal correlation in time series. This function receives
